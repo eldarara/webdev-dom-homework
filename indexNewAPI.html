@@ -125,13 +125,10 @@
         //  получается ты отправил сообщение на Сахалин , а хочешь получить его из Москвы )))
         //поменял адреса API на - из урока
 
-        addFormButton.disabled = true;
-        addFormButton.textContent = "Комментарий добавляется, подождите";
         addForm.forEach((formElement) => {
           formElement.classList.add("hidden");
         });
         addCommentTitle.classList.remove("hidden");
-        // form.hiden = true;
         fetch("https://webdev-hw-api.vercel.app/api/v1/eldar/comments", {
           method: "POST",
           body: JSON.stringify({
@@ -154,15 +151,22 @@
             return response;
           })
           .then((response) => {
-            if (response.status === 500) {
-              return Promise.reject("Сервер упал");
-            } else if (response.status === 400) {
-              alert(
-                "Имя пользователя и текст комментария должны состоять как минимум из 3 символов"
-              );
-            } else {
+            if (response.status === 201) {
               return response.json();
+            } else if (response.status === 400) {
+              throw new Error("Слишком коротко");
+            } else {
+              throw new Error("Сервер упал, подержите пожалуйста");
             }
+            // if (response.status === 500) {
+            //   return Promise.reject("Сервер упал");
+            // } else if (response.status === 400) {
+            //   alert(
+            //     "Имя пользователя и текст комментария должны состоять как минимум из 3 символов"
+            //   );
+            // } else {
+            //   return response.json();
+            // }
           })
           .then((response) => {
             console.log("Время", Date.now() - dateNow);
@@ -182,13 +186,17 @@
             inputText.value = "";
           })
           .catch((error) => {
+            if (error.message === "Сервер упал, подержите пожалуйста") {
+              alert("Сервер сломался, попробуйте позже");
+            } else if (error.message === "Слишком коротко") {
+              alert("Имя и текст комментария должны содержать 3 символа");
+              addCommentTitle.classList.add("hidden");
+            } else {
+              alert("у вас пропал интернет попробуйте позже");
+            }
             addForm.forEach((formElement) => {
               formElement.classList.remove("hidden");
             });
-            addFormButton.disabled = false;
-            addFormButton.textContent = "Написать";
-            alert("у вас пропал интернет попробуйте позже");
-            console.warn(error);
           });
       }
 
