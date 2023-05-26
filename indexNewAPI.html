@@ -30,23 +30,14 @@
       <div class="add-comment-tittle">Комментарий добавляется</div>
     </div>
   </body>
-  <script src="getComments.js"></script>
+  <script type="module" src="api.js"></script>
   <script src="editComment.js"></script>
   <script src="addLike.js"></script>
-  <script>
-    const commentList = document.querySelector(".comments");
-    const addFormButton = document.querySelector(".add-form-button");
-    const inputName = document.querySelector(".add-form-name");
-    const inputText = document.querySelector(".add-form-text");
-    const form = document.querySelectorAll(".form");
-    const addForm = document.querySelectorAll(".add-form");
-    const container = document.querySelector(".container");
-    const addCommentTitle = document.querySelector(".add-comment-tittle");
-    getComments();
-    addCommentTitle.classList.add("hidden");
+  <script type="module" src="rendering.js"></script>
 
+  <script>
     function dateFormat(date) {
-      //  const date = new Date();
+      console.log(date);
       date.getDate() < 10 ? (dd = "0" + date.getDate()) : (dd = date.getDate());
       date.getMonth() < 10
         ? (MM = "0" + (date.getMonth() + 1))
@@ -62,158 +53,5 @@
         : (mm = date.getMinutes());
       return `${dd}.${MM}.${YY} ${hh}:${mm}`;
     }
-    let comments = [];
-    const renderComments = () => {
-      const commentsHtml = comments
-        .map((comment, index) => {
-          return `<li class='comment'>
-      <div class='comment-header'>
-        <div>${comment.name}</div>
-        <div>${dateFormat(new Date(comment.date))}
-          </div>
-        </div>
-        <div class='comment-body'>
-          <div class= 'comment-text'
-          data-index="${index}"
-          > ${comment.text} </div>
-          </div>
-          <div class='comment-footer'>
-          <div class='likes'>
-          <span class= 'likes-counter'> ${comment.likes}
-            </div>
-          <button class='like-button ${
-            comment.isLiked ? "-active-like" : ""
-          }' data-index="${index}"></button>
-          </div>
-          <div class='edit-container'>
-            <button class='edit-button ${
-              comment.edit ? "" : "edit-click"
-            }' data-index="${index}">Изменить комментарий</button>
-          </div>
-
-      </li>`;
-        })
-        .join("");
-
-      commentList.innerHTML = commentsHtml;
-      initLikeButtonListener();
-      editClick();
-    };
-
-    renderComments();
-
-    addFormButton.addEventListener("click", (event) => {
-      form.forEach((element) => {
-        if (element.value === "") {
-          element.classList.add("error");
-        } else {
-          element.classList.remove("error");
-        }
-      });
-
-      if (inputName.value === "" || inputText.value.length < 1) {
-        // addFormButton.disabled = true;
-        return;
-      } else {
-        /*Объявлена функции в функции , так насколько мне известно работать не будет*/
-        //     function addNewComment() {
-
-        const dateNow = Date.now();
-        // у тебя в отправке нового коммента один адрес API в функции получения комментов другой
-        //то есть даже при условие что обработчик клика по кнопке отправить не содержал ы в себе ошибки function addNewComment() {
-        //ты бы все равно не получил ответа с новым комментом
-        //  получается ты отправил сообщение на Сахалин , а хочешь получить его из Москвы )))
-        //поменял адреса API на - из урока
-
-        addForm.forEach((formElement) => {
-          formElement.classList.add("hidden");
-        });
-        addCommentTitle.classList.remove("hidden");
-        fetch("https://webdev-hw-api.vercel.app/api/v1/eldar/comments", {
-          method: "POST",
-          body: JSON.stringify({
-            text: inputText.value
-              .replaceAll("&", "&amp;")
-              .replaceAll("<", "&lt;")
-              .replaceAll(">", "&gt;")
-              .replaceAll('"', "&quot;")
-              .replace("|", "<div class='quote'>")
-              .replace("|", "</div>"),
-            name: inputName.value
-              .replaceAll("&", "&amp;")
-              .replaceAll("<", "&lt;")
-              .replaceAll(">", "&gt;")
-              .replaceAll('"', "&quot;"),
-          }),
-        })
-          .then((response) => {
-            console.log("Время", Date.now() - dateNow);
-            return response;
-          })
-          .then((response) => {
-            if (response.status === 201) {
-              return response.json();
-            } else if (response.status === 400) {
-              throw new Error("Слишком коротко");
-            } else {
-              throw new Error("Сервер упал, подержите пожалуйста");
-            }
-            // if (response.status === 500) {
-            //   return Promise.reject("Сервер упал");
-            // } else if (response.status === 400) {
-            //   alert(
-            //     "Имя пользователя и текст комментария должны состоять как минимум из 3 символов"
-            //   );
-            // } else {
-            //   return response.json();
-            // }
-          })
-          .then((response) => {
-            console.log("Время", Date.now() - dateNow);
-            return response;
-          })
-          .then(() => {
-            return getComments();
-          })
-          .then((data) => {
-            addFormButton.disabled = false;
-            addFormButton.textContent = "Написать";
-            addForm.forEach((formElement) => {
-              formElement.classList.remove("hidden");
-              addCommentTitle.classList.add("hidden");
-            });
-            inputName.value = "";
-            inputText.value = "";
-          })
-          .catch((error) => {
-            if (error.message === "Сервер упал, подержите пожалуйста") {
-              alert("Сервер сломался, попробуйте позже");
-            } else if (error.message === "Слишком коротко") {
-              alert("Имя и текст комментария должны содержать 3 символа");
-              addCommentTitle.classList.add("hidden");
-            } else {
-              alert("у вас пропал интернет попробуйте позже");
-            }
-            addForm.forEach((formElement) => {
-              formElement.classList.remove("hidden");
-            });
-          });
-      }
-
-      // renderComments(); возможно будет работать и тут
-      initLikeButtonListener();
-    });
-
-    inputName.addEventListener("input", (event) => {
-      if (event.target.value !== "") {
-        addFormButton.disabled = false;
-      }
-    });
-
-    inputText.addEventListener("input", (event) => {
-      if (event.target.value !== "") {
-        addFormButton.disabled = false;
-      }
-    });
   </script>
 </html>
