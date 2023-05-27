@@ -1,7 +1,6 @@
-import { comments } from "./api.js";
+import { comments, initLikeButtonListener } from "./api.js";
 
 const commentList = document.querySelector(".comments");
-
 
 export const renderComments = () => {
   const commentsHtml = comments
