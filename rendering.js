@@ -1,4 +1,10 @@
-import { comments, initLikeButtonListener } from "./api.js";
+import {
+  comments,
+  initLikeButtonListener,
+  editClick,
+  saveEditComment,
+  dateFormat,
+} from "./api.js";
 
 const commentList = document.querySelector(".comments");
 

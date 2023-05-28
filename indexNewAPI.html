@@ -30,28 +30,9 @@
       <div class="add-comment-tittle">Комментарий добавляется</div>
     </div>
   </body>
-  <script type="module" src="api.js"></script>
-  <script src="editComment.js"></script>
-  <script src="addLike.js"></script>
   <script type="module" src="rendering.js"></script>
 
   <script>
-    function dateFormat(date) {
-      console.log(date);
-      date.getDate() < 10 ? (dd = "0" + date.getDate()) : (dd = date.getDate());
-      date.getMonth() < 10
-        ? (MM = "0" + (date.getMonth() + 1))
-        : (MM = date.getMonth() + 1);
-      date.getFullYear()
-        ? (YY = date.getFullYear().toString().slice(-2))
-        : (YY = date.getFullYear().toString().slice(-2));
-      date.getHours() < 10
-        ? (hh = "0" + date.getHours())
-        : (hh = date.getHours());
-      date.getMinutes() < 10
-        ? (mm = "0" + date.getMinutes())
-        : (mm = date.getMinutes());
-      return `${dd}.${MM}.${YY} ${hh}:${mm}`;
-    }
+    
   </script>
 </html>
