@@ -217,19 +217,17 @@ export function saveEditComment(index, popup) {
 }
 
 export function dateFormat(date) {
-  console.log(date);
-  date.getDate() < 10 ? (dd = "0" + date.getDate()) : (dd = date.getDate());
+  let DD, MM, YY, hh, mm;
+  date.getDate() < 10 ? (DD = "0" + date.getDate()) : (DD = date.getDate());
   date.getMonth() < 10
     ? (MM = "0" + (date.getMonth() + 1))
     : (MM = date.getMonth() + 1);
   date.getFullYear()
     ? (YY = date.getFullYear().toString().slice(-2))
     : (YY = date.getFullYear().toString().slice(-2));
-  date.getHours() < 10
-    ? (hh = "0" + date.getHours())
-    : (hh = date.getHours());
+  date.getHours() < 10 ? (hh = "0" + date.getHours()) : (hh = date.getHours());
   date.getMinutes() < 10
     ? (mm = "0" + date.getMinutes())
     : (mm = date.getMinutes());
-  return `${dd}.${MM}.${YY} ${hh}:${mm}`;
+  return `${DD}.${MM}.${YY} ${hh}:${mm}`;
 }
