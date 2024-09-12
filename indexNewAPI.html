@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Проект "Комменты"</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="loader">Комментарии загружаются</div>
+      <ul class="comments">
+        <!--список рендерится из js -->
+      </ul>
+      <div class="add-form">
+        <input
+          type="text"
+          class="form add-form-name"
+          placeholder="Введите ваше имя"
+        />
+        <textarea
+          type="textarea"
+          class="form add-form-text"
+          placeholder="Введите ваш коментарий"
+          rows="4"
+        ></textarea>
+        <div class="add-form-row">
+          <button class="add-form-button">Написать</button>
+        </div>
+      </div>
+      <div class="add-comment-tittle">Комментарий добавляется</div>
+    </div>
+  </body>
+  <script type="module" src="rendering.js"></script>
+
+  <script>
+    
+  </script>
+</html>
